@@ -4,7 +4,9 @@ package net.media.training.live.dip;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,23 +17,17 @@ import java.util.Base64;
  */
 public class EncodingModule {
     public void encodeWithFiles(String inputFile, String outputFile) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile));
-            BufferedReader reader = new BufferedReader(new FileReader(outputFile));
+        FileReader fileReader = new FileReader();
+        List<String> stringList = fileReader.readFile(inputFile);
+        List<String> encodedStringList = new ArrayList<>();
 
-            String aLine;
-            while ((aLine = reader.readLine()) != null) {
-                String encodedLine = Base64.getEncoder().encodeToString(aLine.getBytes());
-                writer.write(encodedLine);
-            }
-            writer.flush();
-            writer.close();
-            reader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        for(String aLine:stringList){
+            String encodedLine = Base64.getEncoder().encodeToString(aLine.getBytes());
+            encodedStringList.add(encodedLine);
         }
+
+        FileWriter fileWriter = new FileWriter();
+        fileWriter.writeFile(encodedStringList, outputFile);
     }
 
     public void encodeBasedOnNetworkAndDatabase(String urlString) {
